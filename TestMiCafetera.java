@@ -5,16 +5,19 @@ import java.util.Scanner;
 public class TestMiCafetera {
 	static final Scanner sc = new Scanner(System.in);
 	public static void main(String[] args) {
-
+		//Diferentes variables que se usar en la ejecucion
 		int vasos=10;
 		double agua =2;
 		int cafe=0;
 		int opcion =0;
 		String contraseniaPedida="";
 		String contraseniaAdministrador="1234";
-
+		//creado el objeto cafetera
 		MiCafetera miCafetera = new MiCafetera(vasos,agua);
+		//llamada para ver todos datos ingresados en la cafetera
 		//miCafetera.valores();
+		
+		//llamadas al menu con sus diferentes opciones
 		do {
 			menu();
 			System.out.println("¿Que desea hacer?");
@@ -33,7 +36,7 @@ public class TestMiCafetera {
 
 							if(miCafetera.pedirCafe(cafe)==0)
 								System.out.println("Cafe servido con exito");
-							System.out.println("agua restante "+miCafetera.getAgua()+" vasos: "+miCafetera.getVasos()+"");
+							System.out.printf("agua restante %.2f vasos restantes %d ",miCafetera.getAgua(),miCafetera.getVasos());
 						}
 					}
 
@@ -59,8 +62,9 @@ public class TestMiCafetera {
 
 		} while (opcion != 3);
 		System.out.println("Gracias por su compra");
+		sc.close();
 	}
-
+	//metodo que nos retorna el menu
 	public static void menu () {
 		System.out.println("");
 		System.out.println("------------------------ Bienvenido -----------------------------------");
@@ -69,10 +73,11 @@ public class TestMiCafetera {
 		System.out.println("Pulse 3 para salir");
 
 	}
+	//metodo que se encarga de la recepcion y contabilización del dinero
 	public static boolean pagar (MiCafetera miCafetera,int cafe) {
 		double euros= 0;
 		double eurosRestantes =0;
-		System.out.println("El valor de este cafe es de: "+miCafetera.valorCafePedido(cafe)+"€");
+		System.out.println("El valor de este cafe es de: "+miCafetera.valorCafePedido(cafe)+"€ (intruducir decimales con ',')");
 		do {
 			System.out.println("Porfavor ingrese el dinero(valor en euros); pulse 0 para cancelar");
 			euros = sc.nextDouble();
@@ -81,11 +86,17 @@ public class TestMiCafetera {
 				if(miCafetera.valorCafePedido(cafe)- eurosRestantes >0)
 					System.out.printf("Le quedan por ingresar: %.2f€%n",miCafetera.valorCafePedido(cafe)-eurosRestantes);
 				else {
-					if(miCafetera.valorCafePedido(cafe)-eurosRestantes < 0)
+					if(!(miCafetera.comprobarCafe(cafe)))
+						System.out.println("Cafe no servido, reembolso de: "+eurosRestantes);
+					else {
+						miCafetera.SumarDinero(cafe);
+						if(miCafetera.valorCafePedido(cafe)-eurosRestantes < 0)
 						System.out.println("Su cambio es de : "+ (eurosRestantes-miCafetera.valorCafePedido(cafe)));
-					else 
+						else { 	
 						System.out.println("Su cambio son 0€");
-					System.out.println("Gracias por su compra");
+						System.out.println("Gracias por su compra");
+						}
+						}
 					return true;
 				}
 			}
@@ -94,16 +105,18 @@ public class TestMiCafetera {
 					System.out.println("El valor no es correcto");
 				else
 					System.out.println("Operacion cancelada, reembolsado: " +eurosRestantes);
+
 		}while(euros!=0);
 		return false;
 	}
+	//menu del administrador con sus diferentes funciones
 	public static void menuAdministrador (MiCafetera miCafetera) {
 		int opcionAdministrador=0;
 		do {
 		System.out.println("¿Que desea gestionar?:");
-		System.out.println("Pulse 1 para llenar la cafetera de agua");
-		System.out.println("Pulse 2 para recargar las capsulas");
-		System.out.println("Pulse 3 para recargar los vasos");
+		System.out.println("Pulse 1 para ver/ver el agua de la cafetera");
+		System.out.println("Pulse 2 para ver/recargar las capsulas");
+		System.out.println("Pulse 3 para ver/recargar los vasos");
 		System.out.println("Pulse 4 para ver el dinero recaudado");
 		System.out.println("Pulse 5 para recoger todo el dinero");
 		System.out.println("Pulse 6 para salir del modo administrador");
@@ -117,6 +130,7 @@ public class TestMiCafetera {
 			break;
 		case 7:
 			System.out.println("Cafetera apagada.");
+			sc.close();
 			System.exit(0);
 			break;
 		case 3: 
@@ -136,6 +150,7 @@ public class TestMiCafetera {
 			int cuantas=0;
 			System.out.println("Que cafe desea recargar?(solo hay 5 tipos)");
 			cualCafe= sc.nextInt();
+			System.out.println("Actualemnte quedan: "+miCafetera.getCapsulasRestantes(cualCafe));
 			System.out.println("Cuantas desea recargar?");
 			cuantas =sc.nextInt();
 			miCafetera.cambiarCapsulas(cualCafe, cuantas);
