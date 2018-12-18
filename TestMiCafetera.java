@@ -12,6 +12,8 @@ public class TestMiCafetera {
 		int opcion =0;
 		String contraseniaPedida="";
 		String contraseniaAdministrador="1234";
+		String usuaroAdministrador ="administrador";
+		String usuarioAministradorPedido="";
 		//creado el objeto cafetera
 		MiCafetera miCafetera = new MiCafetera(vasos,agua);
 		//llamada para ver todos datos ingresados en la cafetera
@@ -31,6 +33,12 @@ public class TestMiCafetera {
 						System.out.println();
 					else {
 						System.out.println("Que cafe desea");
+						System.out.println("Opciones:");
+						System.out.println("0. solo");
+						System.out.println("1. con leche");
+						System.out.println("2. bombom");
+						System.out.println("3. Cortado");
+						System.out.println("4. te");
 						cafe = sc.nextInt();
 						if(pagar(miCafetera, cafe)) {
 
@@ -44,15 +52,17 @@ public class TestMiCafetera {
 				break;
 			case 2:
 				do {
+					System.out.println("Ingrese el usuario (administrador): ");
+					usuarioAministradorPedido = sc.next();
 					System.out.println("Ingrese la contraseña para continuar o 0 para salir(1234)");
 					contraseniaPedida= sc.next();
-					if(contraseniaPedida.equalsIgnoreCase(contraseniaAdministrador)) {
+					if(contraseniaPedida.equalsIgnoreCase(contraseniaAdministrador)&&usuarioAministradorPedido.equalsIgnoreCase(usuaroAdministrador)) {
 						System.out.println("Bienvenido");
 						menuAdministrador(miCafetera);
 						break;
 					}
 					if(Integer.parseInt(contraseniaPedida)!=0)
-						System.out.println("Contraseña incorrecta, intento de nuevo o puse 0 para salir");
+						System.out.println("Contraseña incorrecta o usuario, intento de nuevo o puse 0 para salir");
 				}while(Integer.parseInt(contraseniaPedida)!=0);
 				break;
 
@@ -91,7 +101,7 @@ public class TestMiCafetera {
 					else {
 						miCafetera.SumarDinero(cafe);
 						if(miCafetera.valorCafePedido(cafe)-eurosRestantes < 0)
-						System.out.println("Su cambio es de : "+ (eurosRestantes-miCafetera.valorCafePedido(cafe)));
+						System.out.printf("Su cambio es de: %.2f%n",(eurosRestantes-miCafetera.valorCafePedido(cafe)));
 						else { 	
 						System.out.println("Su cambio son 0€");
 						System.out.println("Gracias por su compra");
